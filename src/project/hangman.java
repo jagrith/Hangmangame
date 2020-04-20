@@ -12,7 +12,7 @@ public class hangman {
 	public static void main(String[] args) {
 		Scanner sc = new Scanner(System.in);
 
-		while (count < 4 && dash.contains(".")) {
+		while (dash.contains(".")) {
 			System.out.println("Guess any letter in the word");
 			System.out.println(dash);
 			String guess = sc.next();
