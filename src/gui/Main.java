@@ -1,9 +1,9 @@
 package gui;
 
 public class Main {
-	public static void main(String[] args) {
-		HangMan han = new HangMan();
-		han.guess();
+Main(){
+	HangMan_SinglePlayer han = new HangMan_SinglePlayer();
+	new Guessing_Word_SinglePlayer();
 	}
 
 }
