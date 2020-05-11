@@ -42,11 +42,12 @@ public class HangMan_DualPlayer {
 	        
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
-				ar[0] = textfield.getText();				
-				new Guessing_Word_DualPlayer();
-								
+				ar[0] = textfield.getText();
+				f.setVisible(false);
+				new Guessing_Word_DualPlayer();			
 			}          
 	      });
+
 		}         	
 
 }

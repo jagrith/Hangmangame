@@ -4,16 +4,24 @@ import java.awt.BorderLayout;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.util.Arrays;
 
+import javax.imageio.ImageIO;
 import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
+import javax.swing.ImageIcon;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
-public class Guessing_Word_DualPlayer {
-	  int failCounter = HangMan_SinglePlayer.failCounter;
+public class Guessing_Word_DualPlayer extends JFrame {
+	  int failCounter = 0;
 	    String whichHangmanPath = "/ImageAssets/hangman" + failCounter + ".png";
 	    JTextField tf;
 		JLabel jlLetsUsed;
@@ -21,12 +29,29 @@ public class Guessing_Word_DualPlayer {
 		int[] wordLength = new int[64];
 		int level = (int) (Math.random() * 64);// random word
 		JFrame frame = new JFrame();	
-		String[] wordList = HangMan_DualPlayer.ar;
+		String wordList = HangMan_DualPlayer.ar[0];
+		JLabel picLabel = new JLabel();
+		JFrame gameFrame = new JFrame();
+        
+	    private void restart()
+	    {
+	    	int dialogResult = JOptionPane.showConfirmDialog(null, 
+	                        "\nWould You Like to Start a New Game?",
+	                        "Play Again?",
+	                        JOptionPane.YES_NO_OPTION);
+	                if (dialogResult == JOptionPane.YES_OPTION) {
+	                    new choosemode();
+	                gameFrame.setVisible(false);
+	                }                
+	                else
+	                    System.exit(0);
+	            }
+	    
+	    
+
 		
 	Guessing_Word_DualPlayer() {
-			
-			JFrame gameFrame = new JFrame();
-	        JPanel bottomRight = new JPanel();
+			JPanel bottomRight = new JPanel();
 	        JPanel bottomLeft = new JPanel();
 	        JPanel top = new JPanel();
 	        JPanel bottom = new JPanel();
@@ -59,18 +84,18 @@ public class Guessing_Word_DualPlayer {
 	        gameFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 	        gameFrame.setResizable(false);
 	        gameFrame.add(panel1);
-	        gameFrame.setSize(800, 500);
+	        gameFrame.setSize(800, 800);
 	        gameFrame.setLocationRelativeTo(null);
 	        gameFrame.setVisible(true);
-	        int j = 0;
 	        String line = "";
-	        for (j = 0; j < 64; j++) {
-	            wordLength[j] = wordList[j].length();
+	        for (int j = 0; j < wordList.length(); j++) {
+	            wordLength[j] = wordList.length();
 	        }
 	        int m = 0;
-	        while (m < wordLength[level]) {
+	        while (m < wordList.length()) {
 	            line += "__ ";
 	            m++;
+	         
 	        }
 
 	        jlLines.setText(line);
@@ -79,31 +104,38 @@ public class Guessing_Word_DualPlayer {
 	            int right = 0;
 	            @Override
 	            public void actionPerformed(ActionEvent e) {
+	            	
+	            	imgPane.remove(picLabel);
 	                JTextField tf = (JTextField) e.getSource();
 	                letter = tf.getText();
 	                tf.setText("");
 	                jlLetsUsed.setText(jlLetsUsed.getText() + letter + " ");
 	                char[] jlabelText = jlLines.getText().toCharArray();
 	                char userEnteredChar = letter.charAt(0);
-	                if (!wordList[level].contains(letter)) {
+	                
+	                if (!wordList.contains(letter)) {
 	                	failCounter++;
-	                	whichHangmanPath = "/home/jagrith/eclipse-workspace/project/src/ImageAssets/hangman" + failCounter + ".png";		
-	                	if(failCounter == 6)//player loses
-	    				{
-	    					try {
-								HangMan_SinglePlayer.ImageDemo(whichHangmanPath);
+	                	if(failCounter > 6) {
+		                	restart();
+		                }
+	                	else{
+	                		String whichHangmanPath = "/home/jagrith/eclipse-workspace/project/src/ImageAssets/hangman" + failCounter + ".png";		
+	                	try {
+	                		BufferedImage myPicture = ImageIO.read(new File(whichHangmanPath));
+	                		picLabel = new JLabel(new ImageIcon(myPicture));
+	                		imgPane.add(picLabel);
 							} catch (Exception e1) {
 								// TODO Auto-generated catch block
 								e1.printStackTrace();
 							}
-	    				}
 	                    return;                    
+	                	}
 	                }
 	                int i = 0;
 
-	                for (i = 0; i < wordList[level].length(); i++) {
+	                for (i = 0; i < wordList.length(); i++) {
 
-	                    if (wordList[level].charAt(i) == userEnteredChar) {
+	                    if (wordList.charAt(i) == userEnteredChar) {
 
 	                        jlabelText[3 * i] = ' ';
 
@@ -112,15 +144,26 @@ public class Guessing_Word_DualPlayer {
 	                        right++;
 	                        
 
-	                    }// end if
-
-	                }// end for
-
+	                    }
+	                }
 	                jlLines.setText(String.valueOf(jlabelText));
 
 	                if (jlabelText.length / 3 == right) {
 
 
+	                }
+	                if(right == wordList.length()) {
+	                	int dialogResult = JOptionPane.showConfirmDialog(null, 
+		                        "\nYou Won!!! \nWould You Like to Start a New Game?",
+		                        "Play Again?",
+		                        JOptionPane.YES_NO_OPTION);
+		                if (dialogResult == JOptionPane.YES_OPTION) {
+		                    new choosemode();
+		                gameFrame.setVisible(false);
+		                }                
+		                else
+		                    System.exit(0);
+	                	
 	                }
 
 	            }// end actionPerformed method

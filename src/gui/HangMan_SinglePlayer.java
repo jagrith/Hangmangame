@@ -48,7 +48,6 @@ public class HangMan_SinglePlayer {
 	      public void run()
 	      {
 	        JFrame editorFrame = new JFrame("Image Demo");
-	        editorFrame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
 	        
 	        BufferedImage image = null;
 	        try
@@ -65,7 +64,6 @@ public class HangMan_SinglePlayer {
 	        JLabel jLabel = new JLabel();
 	        jLabel.setIcon(imageIcon);
 	        editorFrame.getContentPane().add(jLabel, BorderLayout.CENTER);
-
 	        editorFrame.pack();
 	        editorFrame.setLocationRelativeTo(null);
 	        editorFrame.setVisible(true);

@@ -4,11 +4,16 @@ import java.awt.BorderLayout;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.image.BufferedImage;
+import java.io.File;
 
+import javax.imageio.ImageIO;
 import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
+import javax.swing.ImageIcon;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
@@ -22,11 +27,28 @@ public class Guessing_Word_SinglePlayer {
 	int level = (int) (Math.random() * 64);// random word
 	JFrame frame = new JFrame();	
 	String[] wordList = HangMan_SinglePlayer.wordList;
+	JLabel picLabel = new JLabel();
+	JFrame gameFrame = new JFrame();
+    
+    private void restart()
+    {
+    	int dialogResult = JOptionPane.showConfirmDialog(null, 
+                        "\nWould You Like to Start a New Game?",
+                        "Play Again?",
+                        JOptionPane.YES_NO_OPTION);
+                if (dialogResult == JOptionPane.YES_OPTION) {
+                    new choosemode();
+                gameFrame.setVisible(false);
+                }                
+                else
+                    System.exit(0);
+            }
+    
+
 	
 Guessing_Word_SinglePlayer() {
-		
-		JFrame gameFrame = new JFrame();
-        JPanel bottomRight = new JPanel();
+
+	JPanel bottomRight = new JPanel();
         JPanel bottomLeft = new JPanel();
         JPanel top = new JPanel();
         JPanel bottom = new JPanel();
@@ -59,7 +81,7 @@ Guessing_Word_SinglePlayer() {
         gameFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         gameFrame.setResizable(false);
         gameFrame.add(panel1);
-        gameFrame.setSize(800, 500);
+        gameFrame.setSize(800, 800);
         gameFrame.setLocationRelativeTo(null);
         gameFrame.setVisible(true);
         int j = 0;
@@ -79,6 +101,7 @@ Guessing_Word_SinglePlayer() {
             int right = 0;
             @Override
             public void actionPerformed(ActionEvent e) {
+            	imgPane.remove(picLabel);
                 JTextField tf = (JTextField) e.getSource();
                 letter = tf.getText();
                 tf.setText("");
@@ -87,17 +110,21 @@ Guessing_Word_SinglePlayer() {
                 char userEnteredChar = letter.charAt(0);
                 if (!wordList[level].contains(letter)) {
                 	failCounter++;
-                	whichHangmanPath = "/home/jagrith/eclipse-workspace/project/src/ImageAssets/hangman" + failCounter + ".png";		
-                	if(failCounter == 6)//player loses
-    				{
-    					try {
-							HangMan_SinglePlayer.ImageDemo(whichHangmanPath);
+                	if(failCounter > 6) {
+	                	restart();
+	                }
+                	else{
+                		String whichHangmanPath = "/home/jagrith/eclipse-workspace/project/src/ImageAssets/hangman" + failCounter + ".png";		
+                	try {
+                		BufferedImage myPicture = ImageIO.read(new File(whichHangmanPath));
+                		picLabel = new JLabel(new ImageIcon(myPicture));
+                		imgPane.add(picLabel);
 						} catch (Exception e1) {
 							// TODO Auto-generated catch block
 							e1.printStackTrace();
 						}
-    				}
                     return;                    
+                	}                    
                 }
                 int i = 0;
 
@@ -122,6 +149,20 @@ Guessing_Word_SinglePlayer() {
 
 
                 }
+                if(right == wordList[level].length()) {
+                	int dialogResult = JOptionPane.showConfirmDialog(null, 
+	                        "\nYou Won!!! \nWould You Like to Start a New Game?",
+	                        "Play Again?",
+	                        JOptionPane.YES_NO_OPTION);
+	                if (dialogResult == JOptionPane.YES_OPTION) {
+	                    new choosemode();
+	                gameFrame.setVisible(false);
+	                }                
+	                else
+	                    System.exit(0);
+                	
+                }
+
 
             }// end actionPerformed method
 

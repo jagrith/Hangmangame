@@ -33,9 +33,8 @@ public class choosemode {
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
 				f.setVisible(false);
-				new GameSetting();
-				//HangMan_DualPlayer hangd = new HangMan_DualPlayer();
-				//hangd.EnterWord(); 
+				HangMan_DualPlayer hangd = new HangMan_DualPlayer();
+				hangd.EnterWord(); 
 			}          
 	      });
 		}         
